@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         val t = token ?: return              // si no hay token, no seguimos
         lifecycleScope.launch {
             try {
-                val resp = RetrofitClient.api.getCurrentUser(t)
+                // ojo: el formato es "Bearer " + token
+                val resp = RetrofitClient.api.getCurrentUser("Bearer $t")
                 if (resp.isSuccessful) {
                     val user = resp.body()
                     Log.d("API", "Hola ${user?.firstName} - ${user?.email}")
