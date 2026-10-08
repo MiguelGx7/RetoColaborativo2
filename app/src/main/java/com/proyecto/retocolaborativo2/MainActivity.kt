@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.tvResultado).text =
                         "Hola ${user?.firstName}\n${user?.email}"
                 }
+                else {
+                    Log.e("API", "Consulta falló: ${resp.code()}")
+                }
             } catch (e: Exception) {
                 Log.e("API", "Error: ${e.message}")
             }
