@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import model.LoginRequest
 import model.RetrofitClient
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
                 if (resp.isSuccessful) {
                     val user = resp.body()
                     Log.d("API", "Hola ${user?.firstName} - ${user?.email}")
+                    findViewById<TextView>(R.id.tvResultado).text =
+                        "Hola ${user?.firstName}\n${user?.email}"
                 }
             } catch (e: Exception) {
                 Log.e("API", "Error: ${e.message}")
