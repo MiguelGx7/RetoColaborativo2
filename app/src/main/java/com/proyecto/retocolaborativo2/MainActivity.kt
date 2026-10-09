@@ -2,6 +2,7 @@ package com.proyecto.retocolaborativo2
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import model.LoginRequest
 import model.RetrofitClient
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +28,19 @@ class MainActivity : AppCompatActivity() {
         btnLogin.setOnClickListener {
             hacerLogin(etUsuario.text.toString().trim(), etClave.text.toString())
         }
+
+        // ¿ya hay sesión guardada? entonces pedimos directo los datos
+        token = getSharedPreferences("sesion", MODE_PRIVATE).getString("token", null)
+        if (token != null) {
+            obtenerUsuario()
+        }
+    }
+
+    // Oculta los campos y el botón de login
+    private fun ocultarFormulario() {
+        findViewById<EditText>(R.id.etUsuario).visibility = View.GONE
+        findViewById<EditText>(R.id.etClave).visibility = View.GONE
+        findViewById<Button>(R.id.btnLogin).visibility = View.GONE
     }
 
     // ---------- PASO A: POST de login ----------
@@ -40,6 +53,11 @@ class MainActivity : AppCompatActivity() {
                 )
                 if (resp.isSuccessful) {
                     token = resp.body()?.accessToken   // ← guardamos el token
+                    // lo guardamos también en el teléfono para recordar la sesión
+                    getSharedPreferences("sesion", MODE_PRIVATE)
+                        .edit()
+                        .putString("token", token)
+                        .apply()
                     Log.d("API", "Token recibido: $token")
                     obtenerUsuario()                  // seguimos al GET
                 } else {
@@ -67,6 +85,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("API", "Hola ${user?.firstName} - ${user?.email}")
                     findViewById<TextView>(R.id.tvResultado).text =
                         "Hola ${user?.firstName}\n${user?.email}"
+                    ocultarFormulario()
                 }
                 else {
                     Log.e("API", "Consulta falló: ${resp.code()}")
