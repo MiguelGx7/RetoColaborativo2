@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -43,9 +44,13 @@ class MainActivity : AppCompatActivity() {
                     obtenerUsuario()                  // seguimos al GET
                 } else {
                     Log.e("API", "Login falló: ${resp.code()}")
+                    val mensaje = "Login falló: usuario o contraseña incorrectos"
+                    findViewById<TextView>(R.id.tvResultado).text = mensaje
+                    Toast.makeText(this@MainActivity, mensaje, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Log.e("API", "Error de red: ${e.message}")
+                Toast.makeText(this@MainActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
             }
         }
     }
