@@ -29,14 +29,14 @@ class MainActivity : AppCompatActivity() {
             hacerLogin(etUsuario.text.toString().trim(), etClave.text.toString())
         }
 
-        // ¿ya hay sesión guardada? entonces pedimos directo los datos
+// "sesion" es el nombre del archivo donde se guarda el token; MODE_PRIVATE = solo esta app puede leerlo
         token = getSharedPreferences("sesion", MODE_PRIVATE).getString("token", null)
         if (token != null) {
             obtenerUsuario()
         }
     }
 
-    // Oculta los campos y el botón de login
+    // View.GONE = el elemento desaparece y no ocupa espacio en la pantalla
     private fun ocultarFormulario() {
         findViewById<EditText>(R.id.etUsuario).visibility = View.GONE
         findViewById<EditText>(R.id.etClave).visibility = View.GONE
