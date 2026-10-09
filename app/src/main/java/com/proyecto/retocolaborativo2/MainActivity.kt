@@ -2,12 +2,15 @@ package com.proyecto.retocolaborativo2
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import model.LoginRequest
 import model.RetrofitClient
-import android.widget.TextView
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +20,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        hacerLogin("emilys", "emilyspass")
+        val etUsuario = findViewById<EditText>(R.id.etUsuario)
+        val etClave = findViewById<EditText>(R.id.etClave)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+
+        btnLogin.setOnClickListener {
+            hacerLogin(etUsuario.text.toString().trim(), etClave.text.toString())
+        }
     }
 
     // ---------- PASO A: POST de login ----------
@@ -53,6 +62,9 @@ class MainActivity : AppCompatActivity() {
                     Log.d("API", "Hola ${user?.firstName} - ${user?.email}")
                     findViewById<TextView>(R.id.tvResultado).text =
                         "Hola ${user?.firstName}\n${user?.email}"
+                }
+                else {
+                    Log.e("API", "Consulta falló: ${resp.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("API", "Error: ${e.message}")
